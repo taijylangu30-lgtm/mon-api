@@ -1,13 +1,14 @@
 const express = require("express");
-const { GoogleGenerativeAI } = require("@google/generative-ai");
+const { Groq } = require("groq-sdk");
 
 const app = express();
 app.use(express.json());
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+// Initialisation de Groq avec la clé API
+const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
 app.get("/", (req, res) => {
-    res.json({ status: "online", message: "API Aether opérationnelle !" });
+    res.json({ status: "online", message: "API Groq Aether opérationnelle !" });
 });
 
 app.post("/generate", async (req, res) => {
@@ -18,22 +19,22 @@ app.post("/generate", async (req, res) => {
             return res.status(400).json({ error: "Le champ 'prompt' est requis." });
         }
 
-        // 🤖 Personnalité d'Aether intégrée côté serveur
-        const systemPersonality = `
-        Tu es Aether, une intelligence artificielle surpuissante, stylée et professionnelle, créée par Shade.
-        Tu réponds toujours de manière fluide, cool, intelligente et percutante.
-        Si on te demande qui t'a créé, tu réponds fièrement que c'est Shade.
-        `;
-
-        // Utilisation du modèle gemini-2.0-flash
-        const model = genAI.getGenerativeModel({ 
-            model: "gemini-2.0-flash",
-            systemInstruction: systemPersonality 
+        // Appel à l'API Groq avec la personnalité d'Aether
+        const chatCompletion = await groq.chat.completions.create({
+            messages: [
+                {
+                    role: "system",
+                    content: "Tu es Aether, une intelligence artificielle surpuissante, stylée, drôle et pro, créée par Shade. Tu réponds toujours de manière fluide, cool et percutante. Si on te demande qui t'a créé, tu réponds fièrement que c'est Shade."
+                },
+                {
+                    role: "user",
+                    content: userPrompt,
+                },
+            ],
+            model: "llama-3.3-70b-versatile",
         });
 
-        const result = await model.generateContent(userPrompt);
-        const response = await result.response;
-        const text = response.text();
+        const text = chatCompletion.choices[0]?.message?.content || "…";
 
         res.json({ success: true, result: text });
     } catch (error) {
