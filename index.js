@@ -1,10 +1,11 @@
 const express = require("express");
-const { GoogleGenAI } = require("@google/genai");
+const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 const app = express();
 app.use(express.json());
 
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+// Initialisation avec la clé API de Render
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 app.get("/", (req, res) => {
     res.json({ status: "online", message: "API Gemini opérationnelle !" });
@@ -17,12 +18,13 @@ app.post("/generate", async (req, res) => {
             return res.status(400).json({ error: "Le champ 'prompt' est requis." });
         }
 
-        const response = await ai.models.generateContent({
-            model: 'gemini-2.5-flash',
-            contents: prompt,
-        });
+        // Utilisation du modèle rapide de Gemini
+        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+        const result = await model.generateContent(prompt);
+        const response = await result.response;
+        const text = response.text();
 
-        res.json({ success: true, result: response.text });
+        res.json({ success: true, result: text });
     } catch (error) {
         console.error(error);
         res.status(500).json({ success: false, error: error.message });
