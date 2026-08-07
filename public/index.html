@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aether AI - Intelligence Artificielle par Shade</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="dashboard">
+        <!-- En-tête futuriste -->
+        <header class="header">
+            <div class="brand">
+                <h1>AETHER AI</h1>
+                <p>Intelligence artificielle créée par Shade</p>
+            </div>
+            <div class="metrics">
+                <div class="metric-card"><span>Statut:</span> <strong id="status-text" class="online">Online</strong></div>
+                <div class="metric-card"><span>Uptime:</span> <strong id="uptime-text">0s</strong></div>
+                <div class="metric-card"><span>Modèle:</span> <strong id="model-text">llama3</strong></div>
+                <div class="metric-card"><span>Latence:</span> <strong id="latency-text">0ms</strong></div>
+            </div>
+        </header>
+
+        <!-- Centre : Interface de discussion -->
+        <main class="chat-container">
+            <div id="chat-messages" class="chat-messages">
+                <div class="message ai-message">
+                    <div class="bubble">Je suis Aether, une intelligence artificielle créée par Shade. Que puis-je faire pour vous aujourd'hui ?</div>
+                </div>
+            </div>
+            
+            <div id="typing-indicator" class="typing-indicator hidden">
+                <span></span><span></span><span></span> Aether est en train d'écrire...
+            </div>
+
+            <form id="chat-form" class="chat-form">
+                <input type="text" id="user-input" placeholder="Discutez avec Aether..." autocomplete="off" required>
+                <button type="submit" class="send-btn">Envoyer</button>
+            </form>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
